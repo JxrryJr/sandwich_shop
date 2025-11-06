@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Sandwich Shop',
       home: Scaffold(
-        appBar: AppBar(title: const Text('Sandwich counter'),
+        appBar: AppBar(
+          title: const Text('Sandwich counter'),
         ),
         body: const Center(
           child: OrderItemDisplay(5, 'Footlong'),
@@ -40,10 +41,15 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+    return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.blue,
+        ),
+        child: Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}')
+      )
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
