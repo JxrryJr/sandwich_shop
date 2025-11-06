@@ -47,7 +47,7 @@ class OrderItemDisplay extends StatelessWidget {
           color: Colors.blue,
         ),
         child: Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}')
-      )
+      );
   }
 }
 
