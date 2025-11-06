@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: const Text('Sandwich counter'),
         ),
         body: const Center(
-          child: Text('Welcome to My Sandwich Shop!'),
+          child: OrderItemDisplay(5, 'Footlong'),
         ),
       ),
       theme: ThemeData(
@@ -40,7 +40,7 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${quantity * '🥪'}');
+    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
   }
 }
 
