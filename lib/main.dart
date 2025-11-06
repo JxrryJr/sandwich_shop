@@ -42,6 +42,9 @@ class OrderItemDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        alignment: Alignment.center,
+        height: 200,
+        width: 300,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           color: Colors.blue,
