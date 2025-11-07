@@ -16,17 +16,29 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Sandwich counter'),
         ),
-        body: const Center(
-          child: OrderItemDisplay(5, 'Footlong'),
+        body:  Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const OrderItemDisplay(5, 'Footlong'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => print('Add button pressed!'),
+                    child: const Text('Add'),
+                    )
+                  ElevatedButton(
+                    onPressed: () => print('Remove button pressed!'),
+                    child: const Text('Remove'),
+                    )
+                ]
+              )
+            ]
+          )
         ),
       ),
       theme: ThemeData(
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     );
