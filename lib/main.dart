@@ -17,20 +17,29 @@ class MyApp extends StatelessWidget {
           title: const Text('Sandwich counter'),
         ),
         body: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const OrderItemDisplay(5, 'Footlong'),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ElevatedButton(
-              onPressed: () => print('Add button pressed!'),
-              child: const Text('Add'),
-            ),
-            ElevatedButton(
-              onPressed: () => print('Remove button pressed!'),
-              child: const Text('Remove'),
-            )
-          ])
-        ])),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              OrderItemDisplay(
+                _quantity,
+                'Footlong',
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => print('Add button pressed!'),
+                    child: const Text('Add'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => print('Remove button pressed!'),
+                    child: const Text('Remove'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
