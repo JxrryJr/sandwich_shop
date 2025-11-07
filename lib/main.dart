@@ -16,27 +16,21 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Sandwich counter'),
         ),
-        body:  Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const OrderItemDisplay(5, 'Footlong'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => print('Add button pressed!'),
-                    child: const Text('Add'),
-                    )
-                  ElevatedButton(
-                    onPressed: () => print('Remove button pressed!'),
-                    child: const Text('Remove'),
-                    )
-                ]
-              )
-            ]
-          )
-        ),
+        body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const OrderItemDisplay(5, 'Footlong'),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            ElevatedButton(
+              onPressed: () => print('Add button pressed!'),
+              child: const Text('Add'),
+            ),
+            ElevatedButton(
+              onPressed: () => print('Remove button pressed!'),
+              child: const Text('Remove'),
+            )
+          ])
+        ])),
       ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -67,6 +61,26 @@ class OrderItemDisplay extends StatelessWidget {
         Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}')
       ],
     );
+  }
+}
+
+class OrderScreen extends StatefulWidget {
+  final int maxQuantity;
+
+  const OrderScreen({super.key, this.maxQuantity = 10});
+
+  @override
+  State<OrderScreen> createState() {
+    return _OrderScreenState();
+  }
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  int _quantity = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
 
