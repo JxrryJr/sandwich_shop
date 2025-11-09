@@ -40,15 +40,16 @@ class OrderItemDisplay extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('$quantity $itemType sandwich(es): ${List.filled(quantity, '🥪').join()}'),
+                Text(
+                    '$quantity $itemType sandwich(es): ${List.filled(quantity, '🥪').join()}'),
                 if (note.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Text('Note: $note', style: const TextStyle(fontStyle: FontStyle.italic)),
+                    child: Text('Note: $note',
+                        style: const TextStyle(fontStyle: FontStyle.italic)),
                   ),
               ],
-            )
-        ),
+            )),
       ],
     );
   }
@@ -71,7 +72,11 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
-      setState(() => _quantity++);
+      setState(() {
+        _quantity++;
+        // Add this temporary line to see debugging in action
+        print('Current quantity: $_quantity');
+      });
     }
   }
 
@@ -92,7 +97,8 @@ class _OrderScreenState extends State<OrderScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: TextField(
                 decoration: const InputDecoration(
                   labelText: 'Add a note to your order',
