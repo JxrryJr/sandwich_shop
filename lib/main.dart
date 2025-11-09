@@ -23,8 +23,9 @@ class MyApp extends StatelessWidget {
 class OrderItemDisplay extends StatelessWidget {
   final String itemType;
   final int quantity;
+  final String note;
 
-  const OrderItemDisplay(this.quantity, this.itemType, {super.key});
+  const OrderItemDisplay(this.quantity, this.itemType, this.note, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +34,21 @@ class OrderItemDisplay extends StatelessWidget {
       children: [
         Container(
             color: Colors.blue,
-            height: 150,
+            height: 100,
             width: 300,
             alignment: Alignment.center,
-            child:
-                Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}')),
-        Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}'),
-        Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}')
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('$quantity $itemType sandwich(es): ${List.filled(quantity, '🥪').join()}'),
+                if (note.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text('Note: $note', style: const TextStyle(fontStyle: FontStyle.italic)),
+                  ),
+              ],
+            )
+        ),
       ],
     );
   }
@@ -58,6 +67,7 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
+  String _note = '';
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -81,9 +91,24 @@ class _OrderScreenState extends State<OrderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Add a note to your order',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _note = value;
+                  });
+                },
+              ),
+            ),
             OrderItemDisplay(
               _quantity,
               'Footlong',
+              _note,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
