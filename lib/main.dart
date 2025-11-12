@@ -72,11 +72,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
-      setState(() {
-        _quantity++;
-        // Add this temporary line to see debugging in action
-        print('Current quantity: $_quantity');
-      });
+      setState(() => _quantity++ );
     }
   }
 
@@ -120,7 +116,11 @@ class _OrderScreenState extends State<OrderScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _increaseQuantity,
+                  onPressed: VoidCallback _increaseQuantity,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
                   child: const Text('Add'),
                 ),
                 ElevatedButton(
@@ -134,6 +134,21 @@ class _OrderScreenState extends State<OrderScreen> {
       ),
     );
   }
+}
+
+class StyleButton extends StatelessWidget {
+  const StyleButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        // Button action here
+      },
+      child: const Text('Button Text'),
+    );
+  }
+
 }
 
 class MyHomePage extends StatefulWidget {
