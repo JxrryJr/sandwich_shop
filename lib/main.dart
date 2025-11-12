@@ -117,13 +117,13 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 StyledButton(
                   onPressed: _increaseQuantity,
-                  text: const Icon(Icons.add),
-                  key: const Key("Add"),
+                  icon: Icons.add,
+                  label: 'Add',
                 ),
                 StyledButton(
                   onPressed: _decreaseQuantity,
-                  : const Icon(Icons.remove),
-                  key: const Key("Remove"),
+                  icon: Icons.remove,
+                  label: 'Remove',
                 ),
               ],
             ),
@@ -136,19 +136,21 @@ class _OrderScreenState extends State<OrderScreen> {
 
 class StyledButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final dynamic text;
+  final IconData icon;
+  final String label;
 
-  const StyledButton({super.key, required this.onPressed, required this.text});
+  const StyledButton({super.key, required this.onPressed, required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ),
-      child: Text(text),
+      icon: Icon(icon),
+      label: Text(label),
     );
   }
 }
