@@ -33,9 +33,9 @@ class OrderItemDisplay extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-            color: Colors.blue,
-            height: 100,
-            width: 300,
+            // color: Colors.blue,
+            // height: 100,
+            // width: 300,
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -115,16 +115,20 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledButton(
-                  onPressed: _increaseQuantity,
-                  icon: Icons.add,
-                  label: 'Add',
+                SizedBox(
+                  child: StyledButton(
+                    onPressed: _increaseQuantity,
+                    icon: Icons.add,
+                    label: 'Add',
+                  ),
                 ),
-                StyledButton(
+                SizedBox(
+                  child: StyledButton(
                   onPressed: _decreaseQuantity,
                   icon: Icons.remove,
                   label: 'Remove',
                 ),
+              ),
               ],
             ),
           ],
