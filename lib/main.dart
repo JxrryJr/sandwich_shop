@@ -122,7 +122,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 StyledButton(
                   onPressed: _decreaseQuantity,
-                  text: const Icon(Icons.remove),
+                  : const Icon(Icons.remove),
                   key: const Key("Remove"),
                 ),
               ],
