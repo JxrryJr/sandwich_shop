@@ -72,7 +72,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
-      setState(() => _quantity++ );
+      setState(() => _quantity++);
     }
     if (_quantity == 10) {
       setState(() => _note = 'Maximum quantity reached');
@@ -130,11 +130,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 SizedBox(
                   child: StyledButton(
-                  onPressed: _decreaseQuantity,
-                  icon: Icons.remove,
-                  label: 'Remove',
+                    onPressed: _decreaseQuantity,
+                    icon: Icons.remove,
+                    label: 'Remove',
+                  ),
                 ),
-              ),
               ],
             ),
           ],
@@ -149,7 +149,11 @@ class StyledButton extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const StyledButton({super.key, required this.onPressed, required this.icon, required this.label});
+  const StyledButton(
+      {super.key,
+      required this.onPressed,
+      required this.icon,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
