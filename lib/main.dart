@@ -136,21 +136,6 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 }
 
-class StyleButton extends StatelessWidget {
-  const StyleButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        // Button action here
-      },
-      child: const Text('Button Text'),
-    );
-  }
-
-}
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
