@@ -69,6 +69,9 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
   String _note = '';
+  String _selctedSize = 'Footlong';
+
+  static const List<String> _sizes = <String>['6-inch', 'Footlong'];
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -113,6 +116,28 @@ class _OrderScreenState extends State<OrderScreen> {
                 },
               ),
             ),
+
+            Padding (
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              child: DropdownButton<String>(
+                value: _selctedSize,
+                items: _sizes.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selctedSize = newValue!;
+                  });
+                },
+              ),
+            ),
+
+
+
             OrderItemDisplay(
               _quantity,
               'Footlong',
