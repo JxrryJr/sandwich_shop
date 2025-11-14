@@ -116,8 +116,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 },
               ),
             ),
-
-            Padding (
+            Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: DropdownButton<String>(
@@ -135,9 +134,6 @@ class _OrderScreenState extends State<OrderScreen> {
                 },
               ),
             ),
-
-
-
             OrderItemDisplay(
               _quantity,
               'Footlong',
