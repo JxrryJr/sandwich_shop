@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/repositories/order_repository.dart';
 
+enum BreadType { white, wheat, wholemeal, brown, multigrain }
+
 void main() {
   runApp(const MyApp());
 }
@@ -74,8 +76,6 @@ class OrderScreen extends StatefulWidget {
     return _OrderScreenState();
   }
 }
-
-enum BreadType { white, wheat, wholemeal }
 
 class _OrderScreenState extends State<OrderScreen> {
   late final OrderRepository _orderRepository;
@@ -242,4 +242,3 @@ class StyledButton extends StatelessWidget {
     );
   }
 }
-
