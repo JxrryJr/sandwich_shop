@@ -166,5 +166,25 @@ void main() {
           find.text('1 wholemeal footlong sandwich(es): 🥪'), findsOneWidget);
       expect(find.text('Note: Lots of lettuce'), findsOneWidget);
     });
+    testWidgets ('verifies the functionality of the switch widget', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      // Verify initial state is six-inch
+      expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
+
+      // Toggle the switch to footlong
+      await tester.tap(find.byType(Switch));
+      await tester.pump();
+
+      // Verify state is now footlong
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
+
+      // Toggle the switch back to six-inch
+      await tester.tap(find.byType(Switch));
+      await tester.pump();
+
+      // Verify state is back to six-inch
+      expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
+    });
   });
 }
