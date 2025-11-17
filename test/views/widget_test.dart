@@ -166,6 +166,9 @@ void main() {
           find.text('1 wholemeal footlong sandwich(es): 🥪'), findsOneWidget);
       expect(find.text('Note: Lots of lettuce'), findsOneWidget);
     });
+    });
+    
+  group('New test - Switch Widget', () {
     testWidgets ('verifies the functionality of the switch widget', (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
 
@@ -187,4 +190,5 @@ void main() {
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
   });
+
 }
