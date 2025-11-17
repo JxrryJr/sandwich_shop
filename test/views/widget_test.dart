@@ -169,22 +169,22 @@ void main() {
     testWidgets ('verifies the functionality of the switch widget', (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
 
-      // Verify initial state is six-inch
-      expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
-
-      // Toggle the switch to footlong
-      await tester.tap(find.byType(Switch));
-      await tester.pump();
-
-      // Verify state is now footlong
+      // Verify initial state is footlong
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
 
-      // Toggle the switch back to six-inch
+      // Toggle the switch to six-inch
       await tester.tap(find.byType(Switch));
       await tester.pump();
 
-      // Verify state is back to six-inch
+      // Verify state is now six-inch
       expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
+
+      // Toggle the switch back to footlong
+      await tester.tap(find.byType(Switch));
+      await tester.pump();
+
+      // Verify state is back to footlong
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
   });
 }

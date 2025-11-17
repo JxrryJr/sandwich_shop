@@ -52,7 +52,7 @@ class OrderItemDisplay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                    '$quantity $itemType sandwich(es): ${List.filled(quantity, '🥪').join()}'),
+                    '$quantity ${breadType.name} $itemType sandwich(es): ${List.filled(quantity, '🥪').join()}'),
                 if (note.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
