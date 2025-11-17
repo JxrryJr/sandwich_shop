@@ -143,7 +143,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
     String noteForDisplay;
     if (_notesController.text.isEmpty) {
-      noteForDisplay = 'No notes added.';
+      noteForDisplay = '';
     } else {
       noteForDisplay = _notesController.text;
     }

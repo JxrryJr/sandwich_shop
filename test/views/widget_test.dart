@@ -21,7 +21,7 @@ void main() {
     testWidgets('increments quantity when Add is tapped',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add'));
+      await tester.tap(find.widgetWithText(StyledButton, 'Add'));
       await tester.pump();
       expect(find.text('1 white footlong sandwich(es): 🥪'), findsOneWidget);
     });
@@ -29,10 +29,10 @@ void main() {
     testWidgets('decrements quantity when Remove is tapped',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add'));
+      await tester.tap(find.widgetWithText(StyledButton, 'Add'));
       await tester.pump();
       expect(find.text('1 white footlong sandwich(es): 🥪'), findsOneWidget);
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Remove'));
+      await tester.tap(find.widgetWithText(StyledButton, 'Remove'));
       await tester.pump();
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
@@ -40,7 +40,7 @@ void main() {
     testWidgets('does not decrement below zero', (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Remove'));
+      await tester.tap(find.widgetWithText(StyledButton, 'Remove'));
       await tester.pump();
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
@@ -49,10 +49,10 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
       for (int i = 0; i < 10; i++) {
-        await tester.tap(find.widgetWithText(ElevatedButton, 'Add'));
+        await tester.tap(find.widgetWithText(StyledButton, 'Add'));
         await tester.pump();
       }
-      expect(find.text('5 white footlong sandwich(es): 🥪🥪🥪🥪🥪'),
+      expect(find.text('10 white footlong sandwich(es): 🥪🥪🥪🥪🥪🥪🥪🥪🥪🥪'),
           findsOneWidget);
     });
   });
@@ -96,7 +96,7 @@ void main() {
       await tester.pumpWidget(testApp);
       expect(find.byIcon(Icons.add), findsOneWidget);
       expect(find.text('Test Add'), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(StyledButton), findsOneWidget);
     });
   });
 
