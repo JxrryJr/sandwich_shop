@@ -77,6 +77,7 @@ class OrderScreen extends StatefulWidget {
   }
 
   //PricingRepository pricingRepository = _quantity * unitPrice; 
+
 }
 
 class _OrderScreenState extends State<OrderScreen> {
@@ -174,6 +175,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('six-inch', style: normalText),
                 Switch(
+                  key: const Key('sandwich_TypeSwitch'),
                   value: _isFootlong,
                   onChanged: _onSandwichTypeChanged,
                 ),
@@ -185,6 +187,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('untoasted', style: normalText),
                 Switch(
+                  key: const Key('ToastedSwitch'),
                   value: _isToasted,
                   onChanged: (value) {
                     setState(() => _isToasted = value);
