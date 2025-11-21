@@ -169,26 +169,44 @@ void main() {
     });
     
   group('New test - Switch Widget', () {
-    testWidgets ('verifies the functionality of the switch widget', (WidgetTester tester) async {
-      await tester.pumpWidget(const MyApp());
-
+    testWidgets ('verifies the functionality of the sandwichType switch widget', (WidgetTester tester) async {
+      
+      const sandwichTypeSwitch = Key('sandwichTypeSwitch');
+      
+      await tester.pumpWidget(const MyApp(key: sandwichTypeSwitch));
       // Verify initial state is footlong
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
-
       // Toggle the switch to six-inch
-      await tester.tap(find.byType(Switch));
+      await tester.tap(find.byKey(const Key('sandwichTypeSwitch')));
       await tester.pump();
-
       // Verify state is now six-inch
       expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
-
       // Toggle the switch back to footlong
-      await tester.tap(find.byType(Switch));
+      await tester.tap(find.byKey(const Key('sandwichTypeSwitch')));
       await tester.pump();
-
       // Verify state is back to footlong
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
   });
 
+  group('New test - Toasted Switch Widget', () {
+    testWidgets ('verifies the functionality of the "toasted" switch widget', (WidgetTester tester) async {
+      
+      const Key = Key('ToastedSwitch');
+      
+      await tester.pumpWidget(const MyApp());
+      // Verify initial state is untoasted
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
+      // Toggle the switch to toasted
+      final switches = find.byKey(const Key('ToastedSwitch'));
+      await tester.tap(switches.at(1)); // Second switch for toasted
+      await tester.pump();
+      // Verify state is now toasted (no text change, but internal state change)
+      // Toggle the switch back to untoasted
+      await tester.tap(switches.at(1)); // Second switch for untoasted
+      await tester.pump();
+      // Verify state is back to untoasted
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
+    });
+  });
 }
