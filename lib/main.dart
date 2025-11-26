@@ -17,11 +17,11 @@ class Sandwich {
   final bool isFootlong;
   final bool isToasted;
 
-  Sandwich({
-    required this.type,
-    required this.isFootlong,
-    required this.breadType,
-  });
+   Sandwich({
+     required this.type,
+     required this.isFootlong,
+     required this.breadType,
+   });
 
   String get name {
     switch (type) {
@@ -147,17 +147,17 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   VoidCallback? _getIncreaseCallback() {
-    if (_orderRepository.canIncrement) {
-      return () => setState(_orderRepository.increment);
+     if (_orderRepository.canIncrement) {
+       return () => setState(_orderRepository.increment);
     }
-    return null;
+     return null;
   }
 
   VoidCallback? _getDecreaseCallback() {
     if (_orderRepository.canDecrement) {
       return () => setState(_orderRepository.decrement);
-    }
-    return null;
+      }
+      return null;
   }
 
   void _onSandwichTypeChanged(bool value) {
