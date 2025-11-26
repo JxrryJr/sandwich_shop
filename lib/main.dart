@@ -1,8 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
-import 'package:sandwich_shop/repositories/order_repository.dart';
+import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
-enum BreadType { white, wheat, wholemeal, brown, multigrain }
+enum BreadType { white, wheat, wholemeal }
+
+enum SandwichType {
+  veggieDelight,
+  chickenTeriyaki,
+  tunaMelt,
+  meatballMarinara,
+}
+
+class Sandwich {
+  final SandwichType type;
+  final BreadType breadType;
+  final bool isFootlong;
+  final bool isToasted;
+
+  Sandwich({
+    required this.type,
+    required this.isFootlong,
+    required this.breadType,
+  });
+
+  String get name {
+    switch (type) {
+      case SandwichType.veggieDelight:
+        return 'Veggie Delight';
+      case SandwichType.chickenTeriyaki:
+        return 'Chicken Teriyaki';
+      case SandwichType.tunaMelt:
+        return 'Tuna Melt';
+      case SandwichType.meatballMarinara:
+        return 'Meatball Marinara';
+    }
+  }
+
+  String get image {
+    String typeString = type.name;
+    String sizeString = '';
+    if (isFootlong) {
+      sizeString = 'footlong';
+    } else {
+      sizeString = 'six_inch';
+    }
+    return 'assets/images/${typeString}_$sizeString.png';
+  }
+}
+
 
 void main() {
   runApp(const MyApp());
@@ -76,8 +121,7 @@ class OrderScreen extends StatefulWidget {
     return _OrderScreenState();
   }
 
-  //PricingRepository pricingRepository = _quantity * unitPrice; 
-
+  //PricingRepository pricingRepository = _quantity * unitPrice;
 }
 
 class _OrderScreenState extends State<OrderScreen> {
@@ -170,6 +214,13 @@ class _OrderScreenState extends State<OrderScreen> {
               note: noteForDisplay,
             ),
             const SizedBox(height: 20),
+            // Calculate and display total price for the current order
+            Builder(builder: (context) {
+              final double price = PricingRepository()
+                  .calculatePrice(_orderRepository.quantity, _isFootlong);
+              return Text('Total: £${price.toStringAsFixed(2)}',
+                  style: normalText);
+            }),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
