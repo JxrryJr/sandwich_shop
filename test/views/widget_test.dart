@@ -203,10 +203,51 @@ void main() {
       await tester.pump();
       // Verify state is now toasted (no text change, but internal state change)
       // Toggle the switch back to untoasted
-       await tester.tap(switches.at(0)); // Second switch for untoasted
-       await tester.pump();
+      await tester.tap(switches.at(0)); // Second switch for untoasted
+      await tester.pump();
       // Verify state is back to untoasted
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
+    });
+  });
+
+  group('OrderScreen - SnackBar', () {
+    testWidgets('shows SnackBar after adding to cart',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      // Find and tap the Add to Cart button
+      final addButton = find.widgetWithText(StyledButton, 'Add to Cart');
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+
+      // Advance animations so the SnackBar is shown
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      // Verify a SnackBar is displayed with confirmation text
+      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.textContaining('Added'), findsWidgets);
+    });
+  });
+
+  group('OrderScreen - Cart Summary', () {
+    testWidgets('updates cart summary when Add to Cart is pressed',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      // Initial summary should show zero items and zero total
+      expect(find.text('Cart: 0 items'), findsOneWidget);
+      expect(find.text('Total: £0.00'), findsOneWidget);
+
+      // Tap Add to Cart (initial quantity is 1)
+      final addButton = find.widgetWithText(StyledButton, 'Add to Cart');
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+      await tester.pump();
+
+      // Summary should update
+      expect(find.text('Cart: 1 items'), findsOneWidget);
+      expect(find.text('Total: £4.50'), findsOneWidget);
     });
   });
 }

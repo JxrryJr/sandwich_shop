@@ -86,6 +86,10 @@ class _OrderScreenState extends State<OrderScreen> {
   bool _isFootlong = true;
   BreadType _selectedBreadType = BreadType.white;
   int _quantity = 1;
+  // Simple cart summary state (keeps UI independent of Cart internals)
+  final double _unitPrice = 4.5;
+  int _cartItems = 0;
+  double _cartTotal = 0.0;
 
   @override
   void initState() {
@@ -111,6 +115,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
       setState(() {
         _cart.add(sandwich, _quantity);
+        // update simple UI summary
+        _cartItems += _quantity;
+        _cartTotal += _quantity * _unitPrice;
       });
 
       String sizeText;
@@ -123,6 +130,18 @@ class _OrderScreenState extends State<OrderScreen> {
           'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
 
       debugPrint(confirmationMessage);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(confirmationMessage),
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'VIEW',
+            onPressed: () {
+              // Optional: navigate to cart or show cart view
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -291,6 +310,24 @@ class _OrderScreenState extends State<OrderScreen> {
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Card(
+                  color: Colors.grey.shade100,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Cart: $_cartItems items', style: normalText),
+                        Text('Total: £${_cartTotal.toStringAsFixed(2)}',
+                            style: heading1),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
             ],
