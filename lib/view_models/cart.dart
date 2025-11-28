@@ -1,48 +1,5 @@
-import 'package:collection/collection.dart';
+import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
-
-/// A simple size enum for sandwiches stored in the cart.
-enum SandwichSize { sixInch, footlong }
-
-/// Represents a sandwich configuration (size, bread, toasted, note).
-///
-/// This class is immutable and implements value equality so it can be
-/// used as a key when grouping items in the cart.
-class Sandwich {
-  final SandwichSize size;
-  final String breadType;
-  final bool toasted;
-  final String note;
-
-  const Sandwich({
-    required this.size,
-    required this.breadType,
-    this.toasted = false,
-    this.note = '',
-  });
-
-  bool get isFootlong => size == SandwichSize.footlong;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other is Sandwich &&
-            other.size == size &&
-            other.breadType == breadType &&
-            other.toasted == toasted &&
-            other.note == note);
-  }
-
-  @override
-  int get hashCode => Object.hash(size, breadType, toasted, note);
-
-  @override
-  String toString() {
-    final sizeLabel = isFootlong ? 'footlong' : 'six-inch';
-    final toastedLabel = toasted ? 'toasted' : 'untoasted';
-    return '$breadType $sizeLabel ($toastedLabel)${note.isNotEmpty ? ': $note' : ''}';
-  }
-}
 
 /// Holds a sandwich plus quantity for use in the cart.
 class CartItem {
@@ -74,9 +31,9 @@ class Cart {
   /// configuration exists, the quantity is increased.
   void add(Sandwich sandwich, [int quantity = 1]) {
     if (quantity <= 0) return;
-    final existing = _items.firstWhereOrNull((it) => it.sandwich == sandwich);
-    if (existing != null) {
-      existing.quantity += quantity;
+    final idx = _items.indexWhere((it) => it.sandwich == sandwich);
+    if (idx >= 0) {
+      _items[idx].quantity += quantity;
     } else {
       _items.add(CartItem(sandwich: sandwich, quantity: quantity));
     }
@@ -86,24 +43,25 @@ class Cart {
   /// remaining quantity is zero or below, the item is removed.
   void remove(Sandwich sandwich, [int quantity = 1]) {
     if (quantity <= 0) return;
-    final existing = _items.firstWhereOrNull((it) => it.sandwich == sandwich);
-    if (existing == null) return;
+    final idx = _items.indexWhere((it) => it.sandwich == sandwich);
+    if (idx < 0) return;
+    final existing = _items[idx];
     existing.quantity -= quantity;
     if (existing.quantity <= 0) {
-      _items.remove(existing);
+      _items.removeAt(idx);
     }
   }
 
   /// Sets the quantity for a sandwich entry. If quantity <= 0 the
   /// item is removed.
   void setQuantity(Sandwich sandwich, int quantity) {
-    final existing = _items.firstWhereOrNull((it) => it.sandwich == sandwich);
+    final idx = _items.indexWhere((it) => it.sandwich == sandwich);
     if (quantity <= 0) {
-      if (existing != null) _items.remove(existing);
+      if (idx >= 0) _items.removeAt(idx);
       return;
     }
-    if (existing != null) {
-      existing.quantity = quantity;
+    if (idx >= 0) {
+      _items[idx].quantity = quantity;
     } else {
       _items.add(CartItem(sandwich: sandwich, quantity: quantity));
     }

@@ -1,53 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/view_models/cart.dart';
-
-enum BreadType { white, wheat, wholemeal }
-
-enum SandwichType {
-  veggieDelight,
-  chickenTeriyaki,
-  tunaMelt,
-  meatballMarinara,
-}
-
-class Sandwich {
-  final SandwichType type;
-  final BreadType breadType;
-  final bool isFootlong;
-  final bool isToasted;
-
-  Sandwich({
-    required this.type,
-    required this.isFootlong,
-    required this.breadType,
-    this.isToasted = false, 
-  });
-
-  String get name {
-    switch (type) {
-      case SandwichType.veggieDelight:
-        return 'Veggie Delight';
-      case SandwichType.chickenTeriyaki:
-        return 'Chicken Teriyaki';
-      case SandwichType.tunaMelt:
-        return 'Tuna Melt';
-      case SandwichType.meatballMarinara:
-        return 'Meatball Marinara';
-    }
-  }
-
-  String get image {
-    String typeString = type.name;
-    String sizeString = '';
-    if (isFootlong) {
-      sizeString = 'footlong';
-    } else {
-      sizeString = 'six_inch';
-    }
-    return 'assets/images/${typeString}_$sizeString.png';
-  }
-}
+import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
   runApp(const MyApp());
@@ -156,7 +110,7 @@ class _OrderScreenState extends State<OrderScreen> {
       );
 
       setState(() {
-        _cart.add(sandwich, quantity: _quantity);
+        _cart.add(sandwich, _quantity);
       });
 
       String sizeText;
