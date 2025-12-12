@@ -5,7 +5,8 @@ class StyledButton extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  StyledButton({super.key, this.onPressed, required this.icon, required this.label});
+  StyledButton(
+      {super.key, this.onPressed, required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {

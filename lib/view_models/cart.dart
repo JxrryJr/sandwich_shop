@@ -74,7 +74,8 @@ class Cart extends ChangeNotifier {
     double total = 0.0;
     _items.forEach((sandwich, qty) {
       try {
-        total += pricing.calculatePrice(quantity: qty, isFootlong: sandwich.isFootlong);
+        total += pricing.calculatePrice(
+            quantity: qty, isFootlong: sandwich.isFootlong);
       } catch (_) {
         // If pricing fails for any reason, fall back to a sensible default.
         total += qty * 4.5;
