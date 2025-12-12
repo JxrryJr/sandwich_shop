@@ -17,7 +17,8 @@ class _CartScreenState extends State<CartScreen> {
 
   double _lineTotal(Sandwich sandwich, int qty) {
     try {
-      return _pricing.calculatePrice(quantity: qty, isFootlong: sandwich.isFootlong);
+      return _pricing.calculatePrice(
+          quantity: qty, isFootlong: sandwich.isFootlong);
     } catch (_) {
       return (qty * 4.5);
     }
@@ -53,11 +54,14 @@ class _CartScreenState extends State<CartScreen> {
                       final qty = entries[index].value;
                       final line = _lineTotal(sandwich, qty);
                       final unit = qty > 0 ? line / qty : 0.0;
-                      final title = '${sandwich.name} — ${sandwich.breadType.name} — ${sandwich.isFootlong ? 'footlong' : 'six-inch'}';
+                      final title =
+                          '${sandwich.name} — ${sandwich.breadType.name} — ${sandwich.isFootlong ? 'footlong' : 'six-inch'}';
 
                       return ListTile(
                         title: Text(title),
-                        subtitle: Text('Unit: £${unit.toStringAsFixed(2)}  Line: £${line.toStringAsFixed(2)}', key: Key('line-total-$index')),
+                        subtitle: Text(
+                            'Unit: £${unit.toStringAsFixed(2)}  Line: £${line.toStringAsFixed(2)}',
+                            key: Key('line-total-$index')),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -89,7 +93,8 @@ class _CartScreenState extends State<CartScreen> {
                                       action: SnackBarAction(
                                         label: 'UNDO',
                                         onPressed: () {
-                                          cart.add(sandwich, quantity: removedQty);
+                                          cart.add(sandwich,
+                                              quantity: removedQty);
                                         },
                                       ),
                                     ),
@@ -108,8 +113,10 @@ class _CartScreenState extends State<CartScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Cart: ${cart.countOfItems} items', style: normalText),
-                      Text('Total: £${cart.totalPrice.toStringAsFixed(2)}', key: const Key('cart-total'), style: heading1),
+                      Text('Cart: ${cart.countOfItems} items',
+                          style: normalText),
+                      Text('Total: £${cart.totalPrice.toStringAsFixed(2)}',
+                          key: const Key('cart-total'), style: heading1),
                     ],
                   ),
                 ),
