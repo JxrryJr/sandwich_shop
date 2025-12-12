@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/view_models/cart.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
+import 'package:sandwich_shop/views/styled_button.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
@@ -350,26 +351,4 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 }
 
-class StyledButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final IconData icon;
-  final String label;
-
-  const StyledButton(
-      {super.key, this.onPressed, required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey,
-        disabledForegroundColor: Colors.black38,
-      ),
-      icon: Icon(icon),
-      label: Text(label),
-    );
-  }
-}
+// StyledButton moved to `lib/views/styled_button.dart`.

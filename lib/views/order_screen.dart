@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
-import 'package:sandwich_shop/models/cart.dart';
+import 'package:sandwich_shop/views/styled_button.dart';
+import 'package:sandwich_shop/view_models/cart.dart';
+import 'package:provider/provider.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -16,7 +18,6 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final Cart _cart = Cart();
   final TextEditingController _notesController = TextEditingController();
 
   SandwichType _selectedSandwichType = SandwichType.veggieDelight;
@@ -46,9 +47,9 @@ class _OrderScreenState extends State<OrderScreen> {
         breadType: _selectedBreadType,
       );
 
-      setState(() {
-        _cart.add(sandwich, quantity: _quantity);
-      });
+      // use the provided Cart instance
+      final cart = Provider.of<Cart>(context, listen: false);
+      cart.add(sandwich, quantity: _quantity);
 
       String sizeText;
       if (_isFootlong) {
@@ -79,7 +80,7 @@ class _OrderScreenState extends State<OrderScreen> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => CartScreen(cart: _cart),
+        builder: (BuildContext context) => const CartScreen(),
       ),
     );
   }
@@ -216,20 +217,21 @@ class _OrderScreenState extends State<OrderScreen> {
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
-                backgroundColor: Colors.green,
               ),
               const SizedBox(height: 20),
               StyledButton(
                 onPressed: _navigateToCartView,
                 icon: Icons.shopping_cart,
                 label: 'View Cart',
-                backgroundColor: Colors.blue,
               ),
               const SizedBox(height: 20),
-              Text(
-                'Cart: ${_cart.countOfItems} items - £${_cart.totalPrice.toStringAsFixed(2)}',
-                style: normalText,
-                textAlign: TextAlign.center,
+              // Show summary from Provider-backed cart
+              Consumer<Cart>(
+                builder: (context, cart, _) => Text(
+                  'Cart: ${cart.countOfItems} items - £${cart.totalPrice.toStringAsFixed(2)}',
+                  style: normalText,
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(height: 20),
             ],
@@ -239,42 +241,4 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 }
-
-class StyledButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-
-  final IconData icon;
-
-  final String label;
-
-  final Color backgroundColor;
-
-  const StyledButton({
-    super.key,
-    required this.onPressed,
-    required this.icon,
-    required this.label,
-    required this.backgroundColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
-      backgroundColor: backgroundColor,
-      foregroundColor: Colors.white,
-      textStyle: normalText,
-    );
-
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: myButtonStyle,
-      child: Row(
-        children: [
-          Icon(icon),
-          const SizedBox(width: 8),
-          Text(label),
-        ],
-      ),
-    );
-  }
-}
+// StyledButton is provided in `lib/main.dart` to keep one canonical definition.

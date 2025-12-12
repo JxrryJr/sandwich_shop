@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sandwich_shop/main.dart';
+import 'package:sandwich_shop/views/styled_button.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
@@ -86,12 +87,12 @@ void main() {
 
   group('StyledButton', () {
     testWidgets('renders with icon and label', (WidgetTester tester) async {
-      const testButton = StyledButton(
+      final testButton = StyledButton(
         onPressed: null,
         icon: Icons.add,
         label: 'Test Add',
       );
-      const testApp = MaterialApp(
+      final testApp = MaterialApp(
         home: Scaffold(body: testButton),
       );
       await tester.pumpWidget(testApp);
