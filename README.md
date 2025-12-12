@@ -135,6 +135,21 @@ The `test/` directory contains unit and widget tests. When extending the app, ad
 - `OrderScreen` button enable/disable states
 - Bread selection and note display
 
+### Cart editing feature
+
+- The app now includes an editable Cart screen where users can modify items in their cart.
+- State management: `Cart` is provided application-wide using `provider` (`ChangeNotifier`).
+- File locations:
+  - `lib/view_models/cart.dart` — `Cart` ChangeNotifier model (API: `add`, `remove`, `setQuantity`, `getQuantity`, `countOfItems`, `totalPrice`).
+  - `lib/views/cart_screen.dart` — editable cart UI with increment/decrement/delete controls and undo SnackBar.
+  - `lib/main.dart` — App wired with `ChangeNotifierProvider` and an AppBar cart icon to open the cart.
+- UI & keys for testing:
+  - Per-row controls use stable keys: `inc-<index>`, `dec-<index>`, `del-<index>`, `qty-<index>`.
+  - Cart total uses `Key('cart-total')`.
+- Pricing: `PricingRepository` calculates line totals (fallback to £4.50 per sandwich if pricing fails).
+
+See `docs/CART_FEATURE.md` for implementation notes, defensive behaviors (quantity clamping, fallback pricing), and manual QA steps.
+
 ## Troubleshooting
 
 | Issue | Solution |
