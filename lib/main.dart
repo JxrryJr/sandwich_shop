@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/view_models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => Cart(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -80,17 +85,12 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final Cart _cart = Cart();
   final TextEditingController _notesController = TextEditingController();
 
   SandwichType _selectedSandwichType = SandwichType.veggieDelight;
   bool _isFootlong = true;
   BreadType _selectedBreadType = BreadType.white;
   int _quantity = 1;
-  // Simple cart summary state (keeps UI independent of Cart internals)
-  final double _unitPrice = 4.5;
-  int _cartItems = 0;
-  double _cartTotal = 0.0;
 
   @override
   void initState() {
@@ -114,12 +114,9 @@ class _OrderScreenState extends State<OrderScreen> {
         breadType: _selectedBreadType,
       );
 
-      setState(() {
-        // _cart.add(sandwich, _quantity);
-        // update simple UI summary
-        _cartItems += _quantity;
-        _cartTotal += _quantity * _unitPrice;
-      });
+      // add to provided Cart instance
+      final cart = Provider.of<Cart>(context, listen: false);
+      cart.add(sandwich, quantity: _quantity);
 
       String sizeText;
       if (_isFootlong) {
@@ -135,10 +132,10 @@ class _OrderScreenState extends State<OrderScreen> {
         SnackBar(
           content: Text(confirmationMessage),
           duration: const Duration(seconds: 3),
-          action: SnackBarAction(
+            action: SnackBarAction(
             label: 'VIEW',
             onPressed: () {
-              // Optional: navigate to cart or show cart view
+              // TODO: navigate to CartScreen when implemented
             },
           ),
         ),
@@ -315,17 +312,18 @@ class _OrderScreenState extends State<OrderScreen> {
               const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Card(
-                  color: Colors.grey.shade100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Cart: $_cartItems items', style: normalText),
-                        Text('Total: £${_cartTotal.toStringAsFixed(2)}',
-                            style: heading1),
-                      ],
+                child: Consumer<Cart>(
+                  builder: (context, cart, _) => Card(
+                    color: Colors.grey.shade100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Cart: ${cart.countOfItems} items', style: normalText),
+                          Text('Total: £${cart.totalPrice.toStringAsFixed(2)}', style: heading1),
+                        ],
+                      ),
                     ),
                   ),
                 ),
