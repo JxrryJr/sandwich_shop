@@ -22,14 +22,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider(
+      create: (BuildContext context) {
+        return Cart();
+      },
+      child: const MaterialApp(
       title: 'My Sandwich Shop',
       home: OrderScreen(),
-      routes: {
-        '/about': (context) => const AboutScreen(),
-      },
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      debugShowCheckedModeBanner: false,
       ),
     );
   }
@@ -112,6 +112,36 @@ class _OrderScreenState extends State<OrderScreen> {
     super.dispose();
   }
 
+  Future<void> _navigateToProfile() async {
+    final Map<String, String>? result =
+        await Navigator.push<Map<String, String>>(
+      context,
+      MaterialPageRoute<Map<String, String>>(
+        builder: (BuildContext context) => const ProfileScreen(),
+      ),
+    );
+
+    final bool hasResult = result != null;
+    final bool widgetStillMounted = mounted;
+
+    if (hasResult && widgetStillMounted) {
+      _showWelcomeMessage(result);
+    }
+  }
+
+  void _showWelcomeMessage(Map<String, String> profileData) {
+    final String name = profileData['name']!;
+    final String location = profileData['location']!;
+    final String welcomeMessage = 'Welcome, $name! Ordering from $location';
+
+    final SnackBar welcomeSnackBar = SnackBar(
+      content: Text(welcomeMessage),
+      duration: const Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(welcomeSnackBar);
+  }
+
   void _addToCart() {
     if (_quantity > 0) {
       final Sandwich sandwich = Sandwich(
@@ -137,17 +167,11 @@ class _OrderScreenState extends State<OrderScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(confirmationMessage),
-          duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 2),
           action: SnackBarAction(
             label: 'VIEW',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CartScreen()),
-              );
-            },
-          ),
-        ),
-      );
+            );
+      scaffoldMessenger.showSnackBar(snackBar);
     }
   }
 
@@ -156,6 +180,15 @@ class _OrderScreenState extends State<OrderScreen> {
       return _addToCart;
     }
     return null;
+  }
+
+  void _navigateToCartView() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const CartScreen(),
+      ),
+    );
   }
 
   List<DropdownMenuEntry<SandwichType>> _buildSandwichTypeEntries() {
@@ -193,63 +226,34 @@ class _OrderScreenState extends State<OrderScreen> {
     return sandwich.image;
   }
 
-  void _onSandwichTypeChanged(SandwichType? value) {
-    if (value != null) {
-      setState(() {
-        _selectedSandwichType = value;
-      });
-    }
-  }
-
-  void _onSizeChanged(bool value) {
-    setState(() {
-      _isFootlong = value;
-    });
-  }
-
-  void _onBreadTypeChanged(BreadType? value) {
-    if (value != null) {
-      setState(() {
-        _selectedBreadType = value;
-      });
-    }
-  }
-
-  void _increaseQuantity() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
-  void _decreaseQuantity() {
-    if (_quantity > 0) {
-      setState(() {
-        _quantity--;
-      });
-    }
-  }
-
-  VoidCallback? _getDecreaseCallback() {
-    if (_quantity > 0) {
-      return _decreaseQuantity;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 100,
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ),
         title: const Text(
           'Sandwich Counter',
           style: heading1,
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CartScreen()),
+          Consumer<Cart>(
+            builder: (context, cart, child) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.shopping_cart),
+                    const SizedBox(width: 4),
+                    Text('${cart.countOfItems}'),
+                  ],
+                ),
               );
             },
           ),
@@ -281,7 +285,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 label: const Text('Sandwich Type'),
                 textStyle: normalText,
                 initialSelection: _selectedSandwichType,
-                onSelected: _onSandwichTypeChanged,
+                onSelected: (SandwichType? value) {
+                  if (value != null) {
+                    setState(() => _selectedSandwichType = value);
+                  }
+                },
                 dropdownMenuEntries: _buildSandwichTypeEntries(),
               ),
               const SizedBox(height: 20),
@@ -291,7 +299,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   const Text('Six-inch', style: normalText),
                   Switch(
                     value: _isFootlong,
-                    onChanged: _onSizeChanged,
+                    onChanged: (value) => setState(() => _isFootlong = value),
                   ),
                   const Text('Footlong', style: normalText),
                 ],
@@ -302,7 +310,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 label: const Text('Bread Type'),
                 textStyle: normalText,
                 initialSelection: _selectedBreadType,
-                onSelected: _onBreadTypeChanged,
+                onSelected: (BreadType? value) {
+                  if (value != null) {
+                    setState(() => _selectedBreadType = value);
+                  }
+                },
                 dropdownMenuEntries: _buildBreadTypeEntries(),
               ),
               const SizedBox(height: 20),
@@ -311,12 +323,14 @@ class _OrderScreenState extends State<OrderScreen> {
                 children: [
                   const Text('Quantity: ', style: normalText),
                   IconButton(
-                    onPressed: _getDecreaseCallback(),
+                    onPressed: _quantity > 0
+                        ? () => setState(() => _quantity--)
+                        : null,
                     icon: const Icon(Icons.remove),
                   ),
                   Text('$_quantity', style: heading1),
                   IconButton(
-                    onPressed: _increaseQuantity,
+                    onPressed: () => setState(() => _quantity++),
                     icon: const Icon(Icons.add),
                   ),
                 ],
@@ -326,27 +340,31 @@ class _OrderScreenState extends State<OrderScreen> {
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
                 label: 'Add to Cart',
+                backgroundColor: Colors.green,
               ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Consumer<Cart>(
-                  builder: (context, cart, _) => Card(
-                    color: Colors.grey.shade100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Cart: ${cart.countOfItems} items',
-                              style: normalText),
-                          Text('Total: £${cart.totalPrice.toStringAsFixed(2)}',
-                              style: heading1),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 20),
+              StyledButton(
+                onPressed: _navigateToCartView,
+                icon: Icons.shopping_cart,
+                label: 'View Cart',
+                backgroundColor: Colors.blue,
+              ),
+              const SizedBox(height: 20),
+              StyledButton(
+                onPressed: _navigateToProfile,
+                icon: Icons.person,
+                label: 'Profile',
+                backgroundColor: Colors.purple,
+              ),
+              const SizedBox(height: 20),
+              Consumer<Cart>(
+                builder: (context, cart, child) {
+                  return Text(
+                    'Cart: ${cart.countOfItems} items - £${cart.totalPrice.toStringAsFixed(2)}',
+                    style: normalText,
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
               const SizedBox(height: 20),
             ],
@@ -356,5 +374,3 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 }
-
-// StyledButton moved to `lib/views/styled_button.dart`.

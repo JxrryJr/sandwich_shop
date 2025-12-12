@@ -11,137 +11,14 @@ class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  State<CartScreen> createState() {
+    return _CartScreenState();
+    }
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final PricingRepository _pricing = PricingRepository();
-
-  double _lineTotal(Sandwich sandwich, int qty) {
-    try {
-      return _pricing.calculatePrice(
-          quantity: qty, isFootlong: sandwich.isFootlong);
-    } catch (_) {
-      return (qty * 4.5);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context);
-    final entries = cart.items.entries.toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Cart', style: heading1),
-      ),
-      body: entries.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text('Your cart is empty', style: heading1),
-                  SizedBox(height: 8),
-                  Text('Total: £0.00', key: Key('cart-total')),
-                ],
-              ),
-            )
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: entries.length,
-                    itemBuilder: (context, index) {
-                      final sandwich = entries[index].key;
-                      final qty = entries[index].value;
-                      final line = _lineTotal(sandwich, qty);
-                      final unit = qty > 0 ? line / qty : 0.0;
-                      final title =
-                          '${sandwich.name} — ${sandwich.breadType.name} — ${sandwich.isFootlong ? 'footlong' : 'six-inch'}';
-
-                      return ListTile(
-                        title: Text(title),
-                        subtitle: Text(
-                            'Unit: £${unit.toStringAsFixed(2)}  Line: £${line.toStringAsFixed(2)}',
-                            key: Key('line-total-$index')),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              key: Key('dec-$index'),
-                              icon: const Icon(Icons.remove),
-                              onPressed: () {
-                                cart.remove(sandwich, quantity: 1);
-                              },
-                            ),
-                            Text('$qty', key: Key('qty-$index')),
-                            IconButton(
-                              key: Key('inc-$index'),
-                              icon: const Icon(Icons.add),
-                              onPressed: () {
-                                cart.add(sandwich, quantity: 1);
-                              },
-                            ),
-                            IconButton(
-                              key: Key('del-$index'),
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                final removedQty = cart.getQuantity(sandwich);
-                                if (removedQty > 0) {
-                                  cart.remove(sandwich, quantity: removedQty);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Text('Item removed'),
-                                      action: SnackBarAction(
-                                        label: 'UNDO',
-                                        onPressed: () {
-                                          cart.add(sandwich,
-                                              quantity: removedQty);
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Cart: ${cart.countOfItems} items',
-                          style: normalText),
-                      Text('Total: £${cart.totalPrice.toStringAsFixed(2)}',
-                          key: const Key('cart-total'), style: heading1),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: StyledButton(
-                      key: const Key('checkout-btn'),
-                      onPressed: _navigateToCheckout,
-                      icon: Icons.payment,
-                      label: 'Checkout',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-
   Future<void> _navigateToCheckout() async {
-    final cart = Provider.of<Cart>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context, listen: false);
 
     if (cart.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -153,19 +30,18 @@ class _CartScreenState extends State<CartScreen> {
       return;
     }
 
-    final result = await Navigator.push<Map<String, dynamic>>(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CheckoutScreen(cart: cart),
+        builder: (context) => const CheckoutScreen(),
       ),
     );
 
     if (result != null && mounted) {
-      // Clear cart (will notify listeners)
       cart.clear();
 
-      final String orderId = result['orderId'] as String? ?? '';
-      final String estimatedTime = result['estimatedTime'] as String? ?? '';
+      final String orderId = result['orderId'] as String;
+      final String estimatedTime = result['estimatedTime'] as String;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -176,8 +52,176 @@ class _CartScreenState extends State<CartScreen> {
         ),
       );
 
-      // Pop the cart screen to return to the previous screen (orders/home)
       Navigator.pop(context);
     }
+  }
+
+  String _getSizeText(bool isFootlong) {
+    if (isFootlong) {
+      return 'Footlong';
+    } else {
+      return 'Six-inch';
+    }
+  }
+
+  double _getItemPrice(Sandwich sandwich, int quantity) {
+    final PricingRepository pricingRepository = PricingRepository();
+    return pricingRepository.calculatePrice(
+      quantity: quantity,
+      isFootlong: sandwich.isFootlong,
+    );
+  }
+
+  void _incrementQuantity(Sandwich sandwich) {
+    final Cart cart = Provider.of<Cart>(context, listen: false);
+    cart.add(sandwich, quantity: 1);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Quantity increased')),
+    );
+  }
+
+  void _decrementQuantity(Sandwich sandwich) {
+    final Cart cart = Provider.of<Cart>(context, listen: false);
+    final wasPresent = cart.items.containsKey(sandwich);
+    cart.remove(sandwich, quantity: 1);
+    if (!cart.items.containsKey(sandwich) && wasPresent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Item removed from cart')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Quantity decreased')),
+      );
+    }
+  }
+
+  void _removeItem(Sandwich sandwich) {
+    final Cart cart = Provider.of<Cart>(context, listen: false);
+    cart.remove(sandwich, quantity: cart.getQuantity(sandwich));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Item removed from cart')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 100,
+            child: Image.asset('assets/images/logo.png'),
+          ),
+        ),
+        title: const Text(
+          'Cart View',
+          style: heading1,
+        ),
+        actions: [
+          Consumer<Cart>(
+            builder: (context, cart, child) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.shopping_cart),
+                    const SizedBox(width: 4),
+                    Text('${cart.countOfItems}'),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Consumer<Cart>(
+            builder: (context, cart, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  if (cart.items.isEmpty)
+                    const Text(
+                      'Your cart is empty.',
+                      style: heading1,
+                      textAlign: TextAlign.center,
+                    )
+                  else
+                    for (MapEntry<Sandwich, int> entry in cart.items.entries)
+                      Column(
+                        children: [
+                          Text(entry.key.name, style: heading1),
+                          Text(
+                            '${_getSizeText(entry.key.isFootlong)} on ${entry.key.breadType.name} bread',
+                            style: normalText,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () => _decrementQuantity(entry.key),
+                              ),
+                              Text(
+                                'Qty: ${entry.value}',
+                                style: normalText,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () => _incrementQuantity(entry.key),
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
+                                '£${_getItemPrice(entry.key, entry.value).toStringAsFixed(2)}',
+                                style: normalText,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                tooltip: 'Remove item',
+                                onPressed: () => _removeItem(entry.key),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                  Text(
+                    'Total: £${cart.totalPrice.toStringAsFixed(2)}',
+                    style: heading1,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  Builder(
+                    builder: (BuildContext context) {
+                      final bool cartHasItems = cart.items.isNotEmpty;
+                      if (cartHasItems) {
+                        return StyledButton(
+                          onPressed: _navigateToCheckout,
+                          icon: Icons.payment,
+                          label: 'Checkout',
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  StyledButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icons.arrow_back,
+                    label: 'Back to Order',
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
