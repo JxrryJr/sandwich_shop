@@ -5,6 +5,7 @@ import 'package:sandwich_shop/repositories/pricing_repository.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/views/checkout_screen.dart';
+import 'package:sandwich_shop/views/styled_button.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -126,10 +127,11 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
+                    child: StyledButton(
                       key: const Key('checkout-btn'),
                       onPressed: _navigateToCheckout,
-                      child: const Text('Proceed to Checkout', style: normalText),
+                      icon: Icons.payment,
+                      label: 'Checkout',
                     ),
                   ),
                 ),
@@ -167,7 +169,8 @@ class _CartScreenState extends State<CartScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Order $orderId confirmed! Estimated time: $estimatedTime'),
+          content:
+              Text('Order $orderId confirmed! Estimated time: $estimatedTime'),
           duration: const Duration(seconds: 4),
           backgroundColor: Colors.green,
         ),
