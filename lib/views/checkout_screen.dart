@@ -52,7 +52,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     List<Widget> columnChildren = [];
 
-    columnChildren.add(const Text('Order Summary', style: heading2));
+    columnChildren.add(const Text('Order Summary', style: heading1));
     columnChildren.add(const SizedBox(height: 20));
 
     for (MapEntry<Sandwich, int> entry in widget.cart.items.entries) {
@@ -84,10 +84,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final Widget totalRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text('Total:', style: heading2),
+        const Text('Total:', style: heading1),
         Text(
           '£${widget.cart.totalPrice.toStringAsFixed(2)}',
-          style: heading2,
+          style: heading1,
         ),
       ],
     );

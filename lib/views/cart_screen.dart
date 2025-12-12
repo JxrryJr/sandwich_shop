@@ -4,6 +4,7 @@ import 'package:sandwich_shop/view_models/cart.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/views/checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -120,8 +121,60 @@ class _CartScreenState extends State<CartScreen> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      key: const Key('checkout-btn'),
+                      onPressed: _navigateToCheckout,
+                      child: const Text('Proceed to Checkout', style: normalText),
+                    ),
+                  ),
+                ),
               ],
             ),
     );
+  }
+
+  Future<void> _navigateToCheckout() async {
+    final cart = Provider.of<Cart>(context, listen: false);
+
+    if (cart.items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your cart is empty'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final result = await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutScreen(cart: cart),
+      ),
+    );
+
+    if (result != null && mounted) {
+      // Clear cart (will notify listeners)
+      cart.clear();
+
+      final String orderId = result['orderId'] as String? ?? '';
+      final String estimatedTime = result['estimatedTime'] as String? ?? '';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Order $orderId confirmed! Estimated time: $estimatedTime'),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Pop the cart screen to return to the previous screen (orders/home)
+      Navigator.pop(context);
+    }
   }
 }
