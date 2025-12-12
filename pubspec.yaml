@@ -13,11 +13,14 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
   shared_preferences: ^2.5.4
+  sqflite: ^2.2.8
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  sqflite_common_ffi: ^2.3.6
 
 flutter:
   uses-material-design: true

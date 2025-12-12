@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
-import 'package:sandwich_shop/view_models/cart.dart';
+import 'package:sandwich_shop/views/styled_button.dart';
+import 'package:sandwich_shop/views/settings_screen.dart';
+import 'package:sandwich_shop/views/common_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -52,29 +53,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ScaffoldMessenger.of(context).showSnackBar(validationSnackBar);
   }
 
+  void _navigateToSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const SettingsScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          Consumer<Cart>(
-            builder: (context, cart, child) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.shopping_cart),
-                    const SizedBox(width: 4),
-                    Text('${cart.countOfItems}'),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+      appBar: const CommonAppBar(title: 'Profile'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -101,6 +92,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ElevatedButton(
               onPressed: _saveProfile,
               child: const Text('Save Profile'),
+            ),
+            const SizedBox(height: 20),
+            StyledButton(
+              onPressed: _navigateToSettings,
+              icon: Icons.settings,
+              label: 'Settings',
             ),
           ],
         ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/views/common_widgets.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
 import 'package:sandwich_shop/views/styled_button.dart';
 import 'package:sandwich_shop/view_models/cart.dart';
 import 'package:provider/provider.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
-import 'package:provider/provider.dart';
+// settings_screen import removed; navigation helpers not used here anymore
+import 'package:sandwich_shop/views/order_history_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   final int maxQuantity;
@@ -77,11 +79,22 @@ class _OrderScreenState extends State<OrderScreen> {
     return null;
   }
 
+  // Removed unused _navigateToSettings helper; navigation uses other helpers.
+
   void _navigateToCartView() {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) => const CartScreen(),
+      ),
+    );
+  }
+
+  void _navigateToOrderHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => const OrderHistoryScreen(),
       ),
     );
   }
@@ -124,19 +137,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 100,
-            child: Image.asset('assets/images/logo.png'),
-          ),
-        ),
-        title: const Text(
-          'Sandwich Counter',
-          style: heading1,
-        ),
-      ),
+      appBar: const CommonAppBar(title: 'Sandwich Counter'),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -148,7 +149,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   _getCurrentImagePath(),
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Center(
+                    return Center(
                       child: Text(
                         'Image not found',
                         style: normalText,
@@ -174,12 +175,12 @@ class _OrderScreenState extends State<OrderScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Six-inch', style: normalText),
+                  Text('Six-inch', style: normalText),
                   Switch(
                     value: _isFootlong,
                     onChanged: (value) => setState(() => _isFootlong = value),
                   ),
-                  const Text('Footlong', style: normalText),
+                  Text('Footlong', style: normalText),
                 ],
               ),
               const SizedBox(height: 20),
@@ -199,7 +200,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Quantity: ', style: normalText),
+                  Text('Quantity: ', style: normalText),
                   IconButton(
                     onPressed: _quantity > 0
                         ? () => setState(() => _quantity--)
@@ -233,6 +234,12 @@ class _OrderScreenState extends State<OrderScreen> {
                   style: normalText,
                   textAlign: TextAlign.center,
                 ),
+              ),
+              const SizedBox(height: 20),
+              StyledButton(
+                onPressed: _navigateToOrderHistory,
+                icon: Icons.history,
+                label: 'Order History',
               ),
               const SizedBox(height: 20),
             ],
