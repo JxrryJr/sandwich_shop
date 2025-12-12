@@ -30,63 +30,7 @@ class Cart extends ChangeNotifier {
 
   void clear() {
     _items.clear();
-    notifyListeners();
-  }
 
-  double get totalPrice {
-    final pricingRepository = PricingRepository();
-    double total = 0.0;
-
-    for (Sandwich sandwich in _items.keys) {
-      int quantity = _items[sandwich]!;
-      total += pricingRepository.calculatePrice(
-        quantity: quantity,
-        isFootlong: sandwich.isFootlong,
-      );
-    }
-
-    return total;
-  }
-
-  bool get isEmpty => _items.isEmpty;
-
-  int get length => _items.length;
-
-  int get countOfItems {
-    int total = 0;
-    for (int quantity in _items.values) {
-      total += quantity;
-    }
-    return total;
-  }
-
-  int getQuantity(Sandwich sandwich) {
-    if (_items.containsKey(sandwich)) {
-      return _items[sandwich]!;
-    }
-    return 0;
-  }
-}
-
-/// Holds a sandwich plus quantity for use in the cart.
-class CartItem {
-  final Sandwich sandwich;
-  int quantity;
-
-  CartItem({required this.sandwich, required this.quantity});
-
-  @override
-  String toString() => '${sandwich.toString()} x $quantity';
-}
-
-/// Manages a collection of sandwiches and calculates totals using
-/// `PricingRepository`.
-class ShoppingCart {
-  final PricingRepository _pricingRepository;
-  final List<CartItem> _items = [];
-
-  ShoppingCart({PricingRepository? pricingRepository})
-      : _pricingRepository = pricingRepository ?? PricingRepository();
 
   /// Returns an unmodifiable view of items in the cart.
   List<CartItem> get items => List.unmodifiable(_items);
