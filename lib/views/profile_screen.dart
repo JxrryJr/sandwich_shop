@@ -55,8 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(
-        title: 'Profile',
+      appBar: AppBar(
+        title: const Text('Profile'),
         actions: [
           Consumer<Cart>(
             builder: (context, cart, child) {
