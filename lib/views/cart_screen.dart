@@ -14,7 +14,7 @@ class CartScreen extends StatefulWidget {
   @override
   State<CartScreen> createState() {
     return _CartScreenState();
-    }
+  }
 }
 
 class _CartScreenState extends State<CartScreen> {

@@ -57,7 +57,9 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final double logoHeight;
 
-  const CommonAppBar({Key? key, required this.title, this.actions, this.logoHeight = 56}) : super(key: key);
+  const CommonAppBar(
+      {Key? key, required this.title, this.actions, this.logoHeight = 56})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
