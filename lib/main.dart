@@ -137,7 +137,9 @@ class _OrderScreenState extends State<OrderScreen> {
           action: SnackBarAction(
             label: 'VIEW',
             onPressed: () {
-              // TODO: navigate to CartScreen when implemented
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              );
             },
           ),
         ),
