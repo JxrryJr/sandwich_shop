@@ -5,6 +5,7 @@ import 'package:sandwich_shop/view_models/cart.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
 import 'package:sandwich_shop/views/styled_button.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
+import 'package:sandwich_shop/views/about_screen.dart';
 
 void main() {
   runApp(
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Sandwich Shop',
       home: OrderScreen(),
+      routes: {
+        '/about': (context) => const AboutScreen(),
+      },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
