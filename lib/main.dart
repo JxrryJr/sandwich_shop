@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/view_models/cart.dart';
+import 'package:sandwich_shop/views/cart_screen.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 
 void main() {
@@ -132,7 +133,7 @@ class _OrderScreenState extends State<OrderScreen> {
         SnackBar(
           content: Text(confirmationMessage),
           duration: const Duration(seconds: 3),
-            action: SnackBarAction(
+          action: SnackBarAction(
             label: 'VIEW',
             onPressed: () {
               // TODO: navigate to CartScreen when implemented
@@ -236,6 +237,16 @@ class _OrderScreenState extends State<OrderScreen> {
           'Sandwich Counter',
           style: heading1,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -320,8 +331,10 @@ class _OrderScreenState extends State<OrderScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Cart: ${cart.countOfItems} items', style: normalText),
-                          Text('Total: £${cart.totalPrice.toStringAsFixed(2)}', style: heading1),
+                          Text('Cart: ${cart.countOfItems} items',
+                              style: normalText),
+                          Text('Total: £${cart.totalPrice.toStringAsFixed(2)}',
+                              style: heading1),
                         ],
                       ),
                     ),
