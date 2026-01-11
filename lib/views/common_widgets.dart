@@ -6,7 +6,7 @@ import 'package:sandwich_shop/views/app_styles.dart';
 
 class Logo extends StatelessWidget {
   final double height;
-  const Logo({Key? key, this.height = 56}) : super(key: key);
+  const Logo({super.key, this.height = 56});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class Logo extends StatelessWidget {
 
 class CartIndicator extends StatelessWidget {
   final bool showCount;
-  const CartIndicator({Key? key, this.showCount = true}) : super(key: key);
+  const CartIndicator({super.key, this.showCount = true});
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +58,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double logoHeight;
 
   const CommonAppBar(
-      {Key? key, required this.title, this.actions, this.logoHeight = 56})
-      : super(key: key);
+      {super.key, required this.title, this.actions, this.logoHeight = 56});
 
   @override
   Widget build(BuildContext context) {
